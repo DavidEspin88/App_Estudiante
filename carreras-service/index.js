@@ -1,5 +1,6 @@
 // 1. Importar Express
 const express = require('express');
+const cors = require('cors');
 
 // 2. Crear una instancia de Express
 const app = express();
@@ -8,6 +9,7 @@ const app = express();
 const PORT = 3001;
 
 // Middleware para que nuestro servidor entienda JSON
+app.use(cors());
 app.use(express.json());
 
 // 4. Datos de ejemplo (en un proyecto real, esto vendría de una base de datos)

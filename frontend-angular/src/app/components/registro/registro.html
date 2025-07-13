@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="card">
+    <h2>Registrar Nuevo Estudiante</h2>
+    <form (ngSubmit)="registrarEstudiante()">
+      <div class="form-group">
+        <label for="nombre">Nombre del Estudiante:</label>
+        <select [(ngModel)]="nuevoEstudiante.carreraId">
+          <option [value]="1">Ing. Software</option>
+          <option [value]="2">Medicina</option>
+          <option [value]="3">Diseño Gráfico</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="carreraId">ID de la Carrera:</label>
+        <p class="info">(1: Ing. Software, 2: Medicina, 3: Diseño Gráfico)</p>
+        <input
+          type="number"
+          id="carreraId"
+          name="carreraId"
+          [(ngModel)]="nuevoEstudiante.carreraId"
+          required
+        />
+      </div>
+      <button type="submit">Registrar</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>Estudiantes Registrados</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Carrera</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let estudiante of estudiantes">
+          <td>{{ estudiante.id }}</td>
+          <td>{{ estudiante.nombre }}</td>
+          <td>{{ estudiante.nombreCarrera }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
