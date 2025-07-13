@@ -1,14 +1,7 @@
-// Contenido para src/app/services/api.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface Estudiante {
-  id: number;
-  nombre: string;
-  carreraId: number;
-  nombreCarrera: string;
-}
+import { Estudiante, Carrera } from './interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -16,13 +9,17 @@ export interface Estudiante {
 export class ApiService {
   private readonly apiUrl = 'http://localhost:3000/estudiantes';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  public getEstudiantes(): Observable<Estudiante[]> {
+  getEstudiantes(): Observable<Estudiante[]> {
     return this.http.get<Estudiante[]>(this.apiUrl);
   }
 
-  public addEstudiante(data: { nombre: string, carreraId: number }): Observable<Estudiante> {
+  addEstudiante(data: { nombre: string; carreraId: number }): Observable<Estudiante> {
     return this.http.post<Estudiante>(this.apiUrl, data);
+  }
+
+  getCarreras(): Observable<Carrera[]> {
+    return this.http.get<Carrera[]>('http://localhost:3001/carreras');
   }
 }

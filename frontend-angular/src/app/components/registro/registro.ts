@@ -1,12 +1,8 @@
-// Contenido para src/app/components/registro/registro.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-
-// Importamos el SERVICIO desde su ubicación correcta
-import { ApiService, Estudiante } from '../../services/api';
-imports: [CommonModule, FormsModule] 
+import { ApiService } from '../../services/api';
+import { Estudiante, Carrera } from '../../services/interfaces';
 
 @Component({
   selector: 'app-registro',
@@ -15,53 +11,51 @@ imports: [CommonModule, FormsModule]
   templateUrl: './registro.html',
   styleUrls: ['./registro.css']
 })
-
 export class RegistroComponent implements OnInit {
+  carreras: Carrera[] = [];
+  estudiantes: Estudiante[] = [];
 
-  public estudiantes: Estudiante[] = [];
-  
-  public nuevoEstudiante: { nombre: string, carreraId: number | null } = {
+  nuevoEstudiante: { nombre: string; carreraId: number | null } = {
     nombre: '',
-    carreraId: null
+    carreraId: null,
   };
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
+    this.apiService.getCarreras().subscribe({
+      next: (data) => this.carreras = data,
+      error: (err) => console.error('Error al cargar carreras:', err)
+    });
+
     this.cargarEstudiantes();
   }
 
-  public cargarEstudiantes(): void {
+  cargarEstudiantes(): void {
     this.apiService.getEstudiantes().subscribe({
-      next: (data: Estudiante[]) => {
-        this.estudiantes = data;
-      },
-      error: (err: any) => {
-        console.error('Error al cargar estudiantes:', err);
-      }
+      next: (data) => this.estudiantes = data,
+      error: (err) => console.error('Error al cargar estudiantes:', err)
     });
   }
 
-  public registrarEstudiante(): void {
+  registrarEstudiante(): void {
     if (!this.nuevoEstudiante.nombre || this.nuevoEstudiante.carreraId === null) {
       alert('Por favor, completa todos los campos.');
       return;
     }
-    
-    const estudianteParaEnviar = {
+
+    this.apiService.addEstudiante({
       nombre: this.nuevoEstudiante.nombre,
-      carreraId: this.nuevoEstudiante.carreraId
-    };
-    
-    this.apiService.addEstudiante(estudianteParaEnviar).subscribe({
-      next: (estudianteCreado: Estudiante) => {
+      carreraId: this.nuevoEstudiante.carreraId!
+    }).subscribe({
+      next: (estudianteCreado) => {
         this.estudiantes.push(estudianteCreado);
-        this.nuevoEstudiante.nombre = '';
-        this.nuevoEstudiante.carreraId = null;
+        this.nuevoEstudiante = { nombre: '', carreraId: null };
+        alert('Estudiante registrado con éxito');
       },
-      error: (err: any) => {
+      error: (err) => {
         console.error('Error al registrar estudiante:', err);
-        alert(`Error: ${err.error}`);
+        alert('Error al registrar estudiante. Verifica los datos.');
       }
     });
   }

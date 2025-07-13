@@ -1,47 +1,44 @@
-<div class="container">
-  <div class="card">
-    <h2>Registrar Nuevo Estudiante</h2>
-    <form (ngSubmit)="registrarEstudiante()">
-      <div class="form-group">
-        <label for="nombre">Nombre del Estudiante:</label>
-        <select [(ngModel)]="nuevoEstudiante.carreraId">
-          <option [value]="1">Ing. Software</option>
-          <option [value]="2">Medicina</option>
-          <option [value]="3">Diseño Gráfico</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="carreraId">ID de la Carrera:</label>
-        <p class="info">(1: Ing. Software, 2: Medicina, 3: Diseño Gráfico)</p>
-        <input
-          type="number"
-          id="carreraId"
-          name="carreraId"
-          [(ngModel)]="nuevoEstudiante.carreraId"
-          required
-        />
-      </div>
-      <button type="submit">Registrar</button>
-    </form>
-  </div>
+<h2>Registrador Nuevo Estudiante</h2>
 
-  <div class="card">
-    <h2>Estudiantes Registrados</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Carrera</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let estudiante of estudiantes">
-          <td>{{ estudiante.id }}</td>
-          <td>{{ estudiante.nombre }}</td>
-          <td>{{ estudiante.nombreCarrera }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+<div class="form-group">
+  <label for="nombre">Nombre del Estudiante:</label>
+  <input type="text"
+         id="nombre"
+         name="nombre"
+         [(ngModel)]="nuevoEstudiante.nombre"
+         placeholder="Ej. Juan Pérez"
+         required />
 </div>
+
+<div class="form-group">
+  <label for="carrera">Carrera:</label>
+  <select [(ngModel)]="nuevoEstudiante.carreraId" id="carrera" name="carreraId" required>
+    <option value="" disabled selected>Seleccione una carrera</option>
+    <option *ngFor="let carrera of carreras" [value]="carrera.id">
+      {{ carrera.nombre }}
+    </option>
+  </select>
+</div>
+
+<button (click)="registrarEstudiante()">Registrar</button>
+
+<hr />
+
+<h2>Estudiantes Registrados</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>IDENTIFICACIÓN</th>
+      <th>Nombre</th>
+      <th>Carrera</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let estudiante of estudiantes">
+      <td>{{ estudiante.id }}</td>
+      <td>{{ estudiante.nombre }}</td>
+      <td>{{ estudiante.nombreCarrera }}</td>
+    </tr>
+  </tbody>
+</table>
