@@ -1,21 +1,35 @@
 <h2>Registrador Nuevo Estudiante</h2>
 
+<!-- Mensaje si estamos en modo edición -->
 <p *ngIf="modoEdicion">Editando estudiante #{{ estudianteEditando?.id }}</p>
 
+<!-- Formulario de registro / edición -->
 <div class="form-group">
   <label for="nombre">Nombre del Estudiante:</label>
-  <input type="text" id="nombre" [(ngModel)]="nuevoEstudiante.nombre"
-         placeholder="Ej. Juan Pérez" required />
+  <input
+    type="text"
+    id="nombre"
+    [(ngModel)]="nuevoEstudiante.nombre"
+    placeholder="Ej. Juan Pérez"
+    required
+  />
 </div>
 
 <div class="form-group">
   <label for="carrera">Carrera:</label>
-  <select [(ngModel)]="nuevoEstudiante.carreraId" id="carrera" required>
+  <select
+    id="carrera"
+    [(ngModel)]="nuevoEstudiante.carreraId"
+    required
+  >
     <option value="" disabled>Seleccione una carrera</option>
-    <option *ngFor="let carrera of carreras" [value]="carrera.id">{{ carrera.nombre }}</option>
+    <option *ngFor="let carrera of carreras" [value]="carrera.id">
+      {{ carrera.nombre }}
+    </option>
   </select>
 </div>
 
+<!-- Botones del formulario -->
 <div class="form-group">
   <button *ngIf="!modoEdicion" (click)="registrarEstudiante()">Registrar</button>
   <button *ngIf="modoEdicion" (click)="guardarEdicion()">Guardar</button>
@@ -26,11 +40,18 @@
 
 <h2>Estudiantes Registrados</h2>
 
+<!-- Buscador -->
 <div class="form-group">
   <label for="search">Buscar estudiante o carrera:</label>
-  <input id="search" type="text" [(ngModel)]="searchTerm" placeholder="Ej. Ingeniería o Ana" />
+  <input
+    id="search"
+    type="text"
+    [(ngModel)]="searchTerm"
+    placeholder="Ej. Ingeniería o Ana"
+  />
 </div>
 
+<!-- Tabla de estudiantes -->
 <table>
   <thead>
     <tr>
@@ -47,6 +68,7 @@
       <td>{{ estudiante.nombreCarrera }}</td>
       <td>
         <button (click)="iniciarEdicion(estudiante)">Editar</button>
+        <button (click)="eliminarEstudiante(estudiante.id)">Eliminar</button>
       </td>
     </tr>
     <tr *ngIf="getEstudiantesFiltrados().length === 0">

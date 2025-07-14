@@ -24,5 +24,9 @@ export class ApiService {
   getCarreras(): Observable<Carrera[]> {
     return this.http.get<Carrera[]>('http://localhost:3001/carreras');
   }
+  deleteEstudiante(id: number): Observable<any> {
+  return this.http.delete(`${this.apiUrl}/${id}`);
+}
+
 }
 

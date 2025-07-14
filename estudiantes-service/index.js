@@ -78,6 +78,18 @@ app.put('/estudiantes/:id', async (req, res) => {
         }
     }
 });
+app.delete('/estudiantes/:id', (req, res) => {
+  const estudianteId = parseInt(req.params.id, 10);
+  const index = estudiantes.findIndex(e => e.id === estudianteId);
+
+  if (index === -1) {
+    return res.status(404).send('Estudiante no encontrado');
+  }
+
+  estudiantes.splice(index, 1);
+  console.log(`Estudiante ${estudianteId} eliminado`);
+  res.status(204).send(); // Sin contenido
+});
 
 app.listen(PORT, () => {
     console.log(`Estudiantes-Service escuchando en el puerto ${PORT}`);

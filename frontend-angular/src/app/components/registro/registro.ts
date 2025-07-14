@@ -118,4 +118,20 @@ export class RegistroComponent implements OnInit {
 
     return filtrados.sort((a, b) => a.id - b.id); // orden por ingreso
   }
+  eliminarEstudiante(id: number): void {
+  if (!confirm(`¿Seguro que quieres eliminar al estudiante #${id}?`)) return;
+
+  this.apiService.deleteEstudiante(id).subscribe({
+    next: () => {
+      this.estudiantes = this.estudiantes.filter(e => e.id !== id);
+      alert('Estudiante eliminado exitosamente');
+    },
+    error: (err) => {
+      console.error('Error al eliminar estudiante:', err);
+      alert('No se pudo eliminar el estudiante');
+    }
+  });
 }
+
+}
+
