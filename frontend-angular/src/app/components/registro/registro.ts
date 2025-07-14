@@ -20,7 +20,7 @@ export class RegistroComponent implements OnInit {
 
   nuevoEstudiante: { nombre: string; carreraId: number | null } = {
     nombre: '',
-    carreraId: null,
+    carreraId: null
   };
 
   constructor(private apiService: ApiService) {}
@@ -53,7 +53,9 @@ export class RegistroComponent implements OnInit {
       next: (estudianteCreado) => {
         this.estudiantes.push(estudianteCreado);
         this.resetFormulario();
-        alert('Estudiante registrado con éxito');
+        setTimeout(() => {
+          alert(`${estudianteCreado.nombre} - carrera ${estudianteCreado.nombreCarrera} \n ha sido registrado con éxito`);
+        }, 0);
       },
       error: (err) => {
         console.error('Error al registrar estudiante:', err);
@@ -86,16 +88,36 @@ export class RegistroComponent implements OnInit {
 
     this.apiService.updateEstudiante(actualizado).subscribe({
       next: (res) => {
-        const index = this.estudiantes.findIndex(e => e.id === actualizado.id);
+        const index = this.estudiantes.findIndex(e => e.id === res.id);
         if (index !== -1) {
           this.estudiantes[index] = res;
         }
         this.resetFormulario();
-        alert('Estudiante actualizado correctamente');
+        setTimeout(() => {
+          alert(`${res.nombre} - carrera ${res.nombreCarrera} \n ha sido modificado correctamente`);
+        }, 0);
       },
       error: (err) => {
         console.error('Error al actualizar estudiante:', err);
         alert('No se pudo actualizar el estudiante');
+      }
+    });
+  }
+
+  eliminarEstudiante(id: number): void {
+    const eliminado = this.estudiantes.find(e => e.id === id);
+    if (!confirm(`¿Seguro que deseas eliminar a ${eliminado?.nombre}?`)) return;
+
+    this.apiService.deleteEstudiante(id).subscribe({
+      next: () => {
+        this.estudiantes = this.estudiantes.filter(e => e.id !== id);
+        setTimeout(() => {
+          alert(`${eliminado?.nombre} - carrera ${eliminado?.nombreCarrera} \n ha sido eliminado correctamente`);
+        }, 0);
+      },
+      error: (err) => {
+        console.error('Error al eliminar estudiante:', err);
+        alert('No se pudo eliminar el estudiante');
       }
     });
   }
@@ -118,20 +140,4 @@ export class RegistroComponent implements OnInit {
 
     return filtrados.sort((a, b) => a.id - b.id); // orden por ingreso
   }
-  eliminarEstudiante(id: number): void {
-  if (!confirm(`¿Seguro que quieres eliminar al estudiante #${id}?`)) return;
-
-  this.apiService.deleteEstudiante(id).subscribe({
-    next: () => {
-      this.estudiantes = this.estudiantes.filter(e => e.id !== id);
-      alert('Estudiante eliminado exitosamente');
-    },
-    error: (err) => {
-      console.error('Error al eliminar estudiante:', err);
-      alert('No se pudo eliminar el estudiante');
-    }
-  });
 }
-
-}
-
