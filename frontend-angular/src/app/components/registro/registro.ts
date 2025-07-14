@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api';
 import { Estudiante, Carrera } from '../../services/interfaces';
 
+
+
 @Component({
   selector: 'app-registro',
   standalone: true,
@@ -15,6 +17,7 @@ export class RegistroComponent implements OnInit {
   carreras: Carrera[] = [];
   estudiantes: Estudiante[] = [];
 
+  searchTerm: string = '';
   nuevoEstudiante: { nombre: string; carreraId: number | null } = {
     nombre: '',
     carreraId: null,
@@ -59,4 +62,14 @@ export class RegistroComponent implements OnInit {
       }
     });
   }
+  getEstudiantesFiltrados(): Estudiante[] {
+  const term = this.searchTerm.trim().toLowerCase();
+  if (!term) return this.estudiantes;
+
+  return this.estudiantes.filter(est =>
+    est.nombre.toLowerCase().includes(term) ||
+    est.nombreCarrera.toLowerCase().includes(term)
+  );
+}
+
 }

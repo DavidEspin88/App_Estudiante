@@ -12,7 +12,10 @@
 
 <div class="form-group">
   <label for="carrera">Carrera:</label>
-  <select [(ngModel)]="nuevoEstudiante.carreraId" id="carrera" name="carreraId" required>
+  <select [(ngModel)]="nuevoEstudiante.carreraId"
+          id="carrera"
+          name="carreraId"
+          required>
     <option value="" disabled selected>Seleccione una carrera</option>
     <option *ngFor="let carrera of carreras" [value]="carrera.id">
       {{ carrera.nombre }}
@@ -20,25 +23,35 @@
   </select>
 </div>
 
-<button (click)="registrarEstudiante()">Registrar</button>
+<button (click)="registrarEstudiante()">Ingresar</button>
 
 <hr />
 
 <h2>Estudiantes Registrados</h2>
+<div class="form-group">
+  <label for="search">Buscar estudiante o carrera:</label>
+  <input id="search"
+         type="text"
+         [(ngModel)]="searchTerm"
+         placeholder="Ej. Ingeniería o Ana" />
+</div>
 
 <table>
   <thead>
     <tr>
-      <th>IDENTIFICACIÓN</th>
+      <th>Ingreso</th>
       <th>Nombre</th>
       <th>Carrera</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let estudiante of estudiantes">
+    <tr *ngFor="let estudiante of getEstudiantesFiltrados()">
       <td>{{ estudiante.id }}</td>
       <td>{{ estudiante.nombre }}</td>
       <td>{{ estudiante.nombreCarrera }}</td>
+    </tr>
+    <tr *ngIf="getEstudiantesFiltrados().length === 0">
+      <td colspan="3">No se encontraron estudiantes que coincidan con el criterio.</td>
     </tr>
   </tbody>
 </table>

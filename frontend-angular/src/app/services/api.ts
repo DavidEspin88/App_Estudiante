@@ -22,4 +22,5 @@ export class ApiService {
   getCarreras(): Observable<Carrera[]> {
     return this.http.get<Carrera[]>('http://localhost:3001/carreras');
   }
+  
 }
