@@ -3,9 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Estudiante, Carrera } from './interfaces';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ApiService {
   private readonly apiUrl = 'http://localhost:3000/estudiantes';
 
@@ -19,8 +17,12 @@ export class ApiService {
     return this.http.post<Estudiante>(this.apiUrl, data);
   }
 
+  updateEstudiante(data: Estudiante): Observable<Estudiante> {
+    return this.http.put<Estudiante>(`${this.apiUrl}/${data.id}`, data);
+  }
+
   getCarreras(): Observable<Carrera[]> {
     return this.http.get<Carrera[]>('http://localhost:3001/carreras');
   }
-  
 }
+

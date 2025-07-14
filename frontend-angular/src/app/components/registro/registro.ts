@@ -4,8 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api';
 import { Estudiante, Carrera } from '../../services/interfaces';
 
-
-
 @Component({
   selector: 'app-registro',
   standalone: true,
@@ -16,8 +14,10 @@ import { Estudiante, Carrera } from '../../services/interfaces';
 export class RegistroComponent implements OnInit {
   carreras: Carrera[] = [];
   estudiantes: Estudiante[] = [];
-
   searchTerm: string = '';
+  modoEdicion: boolean = false;
+  estudianteEditando: Estudiante | null = null;
+
   nuevoEstudiante: { nombre: string; carreraId: number | null } = {
     nombre: '',
     carreraId: null,
@@ -30,7 +30,6 @@ export class RegistroComponent implements OnInit {
       next: (data) => this.carreras = data,
       error: (err) => console.error('Error al cargar carreras:', err)
     });
-
     this.cargarEstudiantes();
   }
 
@@ -49,27 +48,74 @@ export class RegistroComponent implements OnInit {
 
     this.apiService.addEstudiante({
       nombre: this.nuevoEstudiante.nombre,
-      carreraId: this.nuevoEstudiante.carreraId!
+      carreraId: Number(this.nuevoEstudiante.carreraId)
     }).subscribe({
       next: (estudianteCreado) => {
         this.estudiantes.push(estudianteCreado);
-        this.nuevoEstudiante = { nombre: '', carreraId: null };
+        this.resetFormulario();
         alert('Estudiante registrado con éxito');
       },
       error: (err) => {
         console.error('Error al registrar estudiante:', err);
-        alert('Error al registrar estudiante. Verifica los datos.');
+        alert('No se pudo registrar el estudiante.');
       }
     });
   }
+
+  iniciarEdicion(est: Estudiante): void {
+    this.estudianteEditando = { ...est };
+    this.nuevoEstudiante.nombre = est.nombre;
+    this.nuevoEstudiante.carreraId = est.carreraId;
+    this.modoEdicion = true;
+  }
+
+  guardarEdicion(): void {
+    if (!this.estudianteEditando || !this.nuevoEstudiante.nombre || this.nuevoEstudiante.carreraId === null) {
+      alert('Completa todos los campos para actualizar.');
+      return;
+    }
+
+    const nombreCarrera = this.carreras.find(c => c.id === this.nuevoEstudiante.carreraId)?.nombre || '';
+
+    const actualizado: Estudiante = {
+      ...this.estudianteEditando,
+      nombre: this.nuevoEstudiante.nombre,
+      carreraId: Number(this.nuevoEstudiante.carreraId),
+      nombreCarrera
+    };
+
+    this.apiService.updateEstudiante(actualizado).subscribe({
+      next: (res) => {
+        const index = this.estudiantes.findIndex(e => e.id === actualizado.id);
+        if (index !== -1) {
+          this.estudiantes[index] = res;
+        }
+        this.resetFormulario();
+        alert('Estudiante actualizado correctamente');
+      },
+      error: (err) => {
+        console.error('Error al actualizar estudiante:', err);
+        alert('No se pudo actualizar el estudiante');
+      }
+    });
+  }
+
+  resetFormulario(): void {
+    this.nuevoEstudiante = { nombre: '', carreraId: null };
+    this.searchTerm = '';
+    this.modoEdicion = false;
+    this.estudianteEditando = null;
+  }
+
   getEstudiantesFiltrados(): Estudiante[] {
-  const term = this.searchTerm.trim().toLowerCase();
-  if (!term) return this.estudiantes;
+    const term = this.searchTerm.trim().toLowerCase();
+    const filtrados = !term
+      ? this.estudiantes
+      : this.estudiantes.filter(e =>
+          e.nombre.toLowerCase().includes(term) ||
+          e.nombreCarrera.toLowerCase().includes(term)
+        );
 
-  return this.estudiantes.filter(est =>
-    est.nombre.toLowerCase().includes(term) ||
-    est.nombreCarrera.toLowerCase().includes(term)
-  );
-}
-
+    return filtrados.sort((a, b) => a.id - b.id); // orden por ingreso
+  }
 }

@@ -1,39 +1,34 @@
 <h2>Registrador Nuevo Estudiante</h2>
 
+<p *ngIf="modoEdicion">Editando estudiante #{{ estudianteEditando?.id }}</p>
+
 <div class="form-group">
   <label for="nombre">Nombre del Estudiante:</label>
-  <input type="text"
-         id="nombre"
-         name="nombre"
-         [(ngModel)]="nuevoEstudiante.nombre"
-         placeholder="Ej. Juan Pérez"
-         required />
+  <input type="text" id="nombre" [(ngModel)]="nuevoEstudiante.nombre"
+         placeholder="Ej. Juan Pérez" required />
 </div>
 
 <div class="form-group">
   <label for="carrera">Carrera:</label>
-  <select [(ngModel)]="nuevoEstudiante.carreraId"
-          id="carrera"
-          name="carreraId"
-          required>
-    <option value="" disabled selected>Seleccione una carrera</option>
-    <option *ngFor="let carrera of carreras" [value]="carrera.id">
-      {{ carrera.nombre }}
-    </option>
+  <select [(ngModel)]="nuevoEstudiante.carreraId" id="carrera" required>
+    <option value="" disabled>Seleccione una carrera</option>
+    <option *ngFor="let carrera of carreras" [value]="carrera.id">{{ carrera.nombre }}</option>
   </select>
 </div>
 
-<button (click)="registrarEstudiante()">Ingresar</button>
+<div class="form-group">
+  <button *ngIf="!modoEdicion" (click)="registrarEstudiante()">Registrar</button>
+  <button *ngIf="modoEdicion" (click)="guardarEdicion()">Guardar</button>
+  <button *ngIf="modoEdicion" (click)="resetFormulario()">Cancelar</button>
+</div>
 
 <hr />
 
 <h2>Estudiantes Registrados</h2>
+
 <div class="form-group">
   <label for="search">Buscar estudiante o carrera:</label>
-  <input id="search"
-         type="text"
-         [(ngModel)]="searchTerm"
-         placeholder="Ej. Ingeniería o Ana" />
+  <input id="search" type="text" [(ngModel)]="searchTerm" placeholder="Ej. Ingeniería o Ana" />
 </div>
 
 <table>
@@ -42,6 +37,7 @@
       <th>Ingreso</th>
       <th>Nombre</th>
       <th>Carrera</th>
+      <th>Acciones</th>
     </tr>
   </thead>
   <tbody>
@@ -49,9 +45,12 @@
       <td>{{ estudiante.id }}</td>
       <td>{{ estudiante.nombre }}</td>
       <td>{{ estudiante.nombreCarrera }}</td>
+      <td>
+        <button (click)="iniciarEdicion(estudiante)">Editar</button>
+      </td>
     </tr>
     <tr *ngIf="getEstudiantesFiltrados().length === 0">
-      <td colspan="3">No se encontraron estudiantes que coincidan con el criterio.</td>
+      <td colspan="4">No se encontraron estudiantes que coincidan con el criterio.</td>
     </tr>
   </tbody>
 </table>
