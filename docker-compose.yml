@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  # Servicio del Frontend (Angular)
+  frontend:
+    build: ./frontend-angular
+    ports:
+      - "4200:80" # Mapea el puerto 4200 de tu máquina al puerto 80 del contenedor Nginx
+    depends_on:
+      - estudiantes-service # No arranca hasta que el servicio de estudiantes esté listo
+
+  # Servicio de Estudiantes (Node.js)
+  estudiantes-service:
+    build: ./estudiantes-service
+    ports:
+      - "3000:3000"
+    depends_on:
+      - carreras-service # No arranca hasta que el servicio de carreras esté listo
+
+  # Servicio de Carreras (Node.js)
+  carreras-service:
+    build: ./carreras-service
+    ports:
+      - "3001:3001"

@@ -8,7 +8,7 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
-const CARRERAS_SERVICE_URL = 'http://localhost:3001/carreras';
+const CARRERAS_SERVICE_URL = 'http://carreras-service:3001/carreras';;
 
 let estudiantes = [
     { id: 1, nombre: 'Juan Perez', carreraId: 1, nombreCarrera: 'Ingeniería de Software' }
