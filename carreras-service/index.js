@@ -1,42 +1,42 @@
-// 1. Importar Express
+// Contenido CORREGIDO Y COMPLETO para carreras-service/index.js
+
 const express = require('express');
 const cors = require('cors');
-
-// 2. Crear una instancia de Express
 const app = express();
-
-// 3. Definir el puerto. Usaremos uno diferente para cada servicio.
 const PORT = 3001;
 
-// Middleware para que nuestro servidor entienda JSON
 app.use(cors());
 app.use(express.json());
 
-// 4. Datos de ejemplo (en un proyecto real, esto vendría de una base de datos)
-const carreras = [
-    { id: 1, nombre: 'Ingeniería de Software' },
-    { id: 2, nombre: 'Medicina' },
-    { id: 3, nombre: 'Diseño Gráfico' }
+// 1. AÑADIMOS la propiedad 'activa: true' a los datos iniciales
+let carreras = [
+    { id: 1, nombre: 'Ingeniería de Software', activa: true },
+    { id: 2, nombre: 'Medicina', activa: true },
+    { id: 3, nombre: 'Diseño Gráfico', activa: true }
 ];
-let nextId = 4; // Para generar IDs para nuevas carreras
-// 5. Definir nuestras rutas (endpoints)
+let nextId = 4;
 
-// GET /carreras - Devuelve todas las carreras
+// --- RUTAS CRUD ---
+
+// 2. GET /carreras - UNA SOLA VEZ, y filtra por estado activo
 app.get('/carreras', (req, res) => {
-    res.json(carreras);
+    // Filtramos para devolver solo las carreras que están marcadas como activas
+    const carrerasActivas = carreras.filter(c => c.activa === true);
+    res.json(carrerasActivas);
 });
 
-// GET /carreras/:id - Devuelve una carrera específica por su ID
+// GET /carreras/:id - Devuelve una carrera por ID (sin importar si está activa o no)
+// Esto es importante para que los estudiantes antiguos puedan seguir validando su carrera.
 app.get('/carreras/:id', (req, res) => {
     const id = parseInt(req.params.id);
     const carrera = carreras.find(c => c.id === id);
-
     if (carrera) {
         res.json(carrera);
     } else {
-        res.status(404).send('Carrera no encontrada');
+        res.status(404).json({ message: 'Carrera no encontrada' });
     }
 });
+
 // POST /carreras - Crea una nueva carrera
 app.post('/carreras', (req, res) => {
     const { nombre } = req.body;
@@ -45,7 +45,8 @@ app.post('/carreras', (req, res) => {
     }
     const nuevaCarrera = {
         id: nextId++,
-        nombre: nombre
+        nombre: nombre,
+        activa: true // Las nuevas carreras siempre se crean como activas
     };
     carreras.push(nuevaCarrera);
     console.log('Nueva carrera creada:', nuevaCarrera);
@@ -64,27 +65,28 @@ app.put('/carreras/:id', (req, res) => {
     if (!nombre) {
         return res.status(400).json({ message: 'El nombre es requerido' });
     }
-
     carreras[carreraIndex].nombre = nombre;
     console.log('Carrera actualizada:', carreras[carreraIndex]);
     res.json(carreras[carreraIndex]);
 });
 
-// DELETE /carreras/:id - Elimina una carrera
+// 3. DELETE /carreras/:id - Corregido para hacer solo la eliminación lógica (soft delete)
 app.delete('/carreras/:id', (req, res) => {
     const id = parseInt(req.params.id);
     const carreraIndex = carreras.findIndex(c => c.id === id);
 
+    // Validamos PRIMERO si la carrera existe
     if (carreraIndex === -1) {
         return res.status(404).json({ message: 'Carrera no encontrada' });
     }
     
-    carreras.splice(carreraIndex, 1);
-    console.log(`Carrera con id ${id} eliminada.`);
-    res.status(204).send();
+    // Cambiamos su estado a inactivo en lugar de borrarla
+    carreras[carreraIndex].activa = false;
+    console.log(`Carrera con id ${id} marcada como inactiva.`);
+    res.status(204).send(); // Enviamos respuesta exitosa
 });
 
-// 6. Iniciar el servidor
+// --- INICIAR SERVIDOR ---
 app.listen(PORT, () => {
-    console.log(`Carreras-Service escuchando en el puerto ${PORT}`);
+    console.log(`Carreras-Service (con soft-delete) escuchando en el puerto ${PORT}`);
 });
