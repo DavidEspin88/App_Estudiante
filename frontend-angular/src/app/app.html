@@ -1,1 +1,14 @@
-<router-outlet></router-outlet>
+<!-- Contenido para src/app/app.component.html -->
+<nav class="main-nav">
+  <h1>Sistema de Registro</h1>
+  <div>
+    <!-- Los routerLink nos permiten navegar entre las páginas -->
+    <a routerLink="/estudiantes" routerLinkActive="active-link">Gestión de Estudiantes</a>
+    <a routerLink="/carreras" routerLinkActive="active-link">Gestión de Carreras</a>
+  </div>
+</nav>
+
+<main class="content">
+  <!--  Angular renderizará el componente de la ruta activa -->
+  <router-outlet></router-outlet>
+</main>

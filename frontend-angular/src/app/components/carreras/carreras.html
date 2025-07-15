@@ -1,0 +1,41 @@
+<div class="container">
+  <div class="card form-card">
+    <h2>{{ idCarreraEditando ? 'Editando Carrera' : 'Nueva Carrera' }}</h2>
+    <form (ngSubmit)="guardarCarrera()">
+      <div class="form-group">
+        <label for="nombreCarrera">Nombre de la Carrera:</label>
+        <input type="text" id="nombreCarrera" name="nombreCarrera" [(ngModel)]="carreraEnFormulario.nombre" required>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn-save">{{ idCarreraEditando ? 'Guardar Cambios' : 'Crear Carrera' }}</button>
+        <button type="button" class="btn-cancel" *ngIf="idCarreraEditando" (click)="cancelarEdicion()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card list-card">
+    <h2>Carreras Disponibles</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th class="actions-header">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let carrera of carreras">
+          <td>{{ carrera.id }}</td>
+          <td>{{ carrera.nombre }}</td>
+          <td>
+            <button class="btn-edit" (click)="seleccionarParaEditar(carrera)">Editar</button>
+            <button class="btn-delete" (click)="eliminarCarrera(carrera.id)">Eliminar</button>
+          </td>
+        </tr>
+        <tr *ngIf="carreras.length === 0">
+          <td colspan="3" class="no-data">No hay carreras registradas.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

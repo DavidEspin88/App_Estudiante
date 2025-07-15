@@ -9,3 +9,7 @@ export interface Estudiante {
   carreraId: number;
   nombreCarrera: string;
 }
+
+export type EstudiantePayload = {
+  // ...
+};
