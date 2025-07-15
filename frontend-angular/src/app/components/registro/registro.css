@@ -76,3 +76,15 @@ th {
   font-size: 14px;
   color: #555;
 }
+button, input {
+  transition: all 0.2s ease-in-out;
+}
+
+button:hover {
+  transform: translateY(-2px); /* Eleva el botón ligeramente */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Sombra más pronunciada */
+}
+
+tbody tr:hover {
+  background-color: #f9f9f9; /* Un gris muy claro */
+}
