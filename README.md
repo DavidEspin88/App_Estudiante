@@ -39,7 +39,7 @@ Este proyecto es una aplicación web full-stack diseñada para gestionar registr
 
 ### DevOps
 *   [**Docker**](https://www.docker.com/)
-*   [**Docker Compose**](https://docs.docker.com/compose/) (para la orquestación de los contenedores)
+*   [**Docker Compose**](https://docs.docker.com/compose/) (para la coordinación y control de contenedores)
 *   [**Nginx**](https://www.nginx.com/) (como servidor web para el frontend)
 
 ---
@@ -62,7 +62,8 @@ La forma recomendada y más sencilla de ejecutar este proyecto es a través de D
 Desde la carpeta raíz del proyecto (`APP_ESTUDIANTES`), ejecuta el siguiente comando en tu terminal:
 
 bash
-docker-compose up --build
+```
+docker-compose up --build```
 
 ## Si la ejecución es local (manual)
 Para ejecutar cada servicio manualmente, necesitará abrir 3 terminales separados con win + ñ en vscode.
