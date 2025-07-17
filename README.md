@@ -63,7 +63,8 @@ Desde la carpeta raíz del proyecto (`APP_ESTUDIANTES`), ejecuta el siguiente co
 
 bash
 ```
-docker-compose up --build```
+docker-compose up --build
+```
 
 ## Si la ejecución es local (manual)
 Para ejecutar cada servicio manualmente, necesitará abrir 3 terminales separados con win + ñ en vscode.
